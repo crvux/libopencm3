@@ -2,11 +2,11 @@ set(LIB_NAME opencm3_stm32f7)
 set(FAMILY STM32F7)
 set(PATH_FRAG "stm32/f7")
 
-set(COMMON_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/stm32/common")
-set(COMMON_STM32_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/stm32")
-set(USB_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/usb")
-set(ETH_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/ethernet")
-set(TARGET_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
+set(COMMON_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/stm32/common")
+set(COMMON_STM32_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/stm32")
+set(USB_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/usb")
+set(ETH_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/ethernet")
+set(TARGET_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
 
 generate_irq(${PATH_FRAG})
 add_library(${LIB_NAME} STATIC
@@ -26,7 +26,7 @@ target_compile_options(${LIB_NAME} PRIVATE
 )
 # FIXME include only needed!
 target_include_directories(${LIB_NAME} PRIVATE
-    "${CMAKE_SOURCE_DIR}/include/"
+    "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
     "${CMAKE_BINARY_DIR}/include/"
     "${CMAKE_BINARY_DIR}/lib/stm32/"
 )

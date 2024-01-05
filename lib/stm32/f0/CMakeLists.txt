@@ -4,8 +4,8 @@ set(PATH_FRAG "stm32/f0")
 
 set(COMMON_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/stm32/common")
 set(COMMON_STM32_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/stm32")
-set(USB_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/usb")
-set(TARGET_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
+set(USB_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/usb")
+set(TARGET_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
 
 generate_irq(${PATH_FRAG})
 add_library(${LIB_NAME} STATIC
@@ -29,7 +29,7 @@ target_include_directories(${LIB_NAME}
         "${CMAKE_BINARY_DIR}/include/"
         "${CMAKE_BINARY_DIR}/lib/stm32/"
     PUBLIC
-        "${CMAKE_SOURCE_DIR}/include/"
+        "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
 )
 target_sources(${LIB_NAME} PRIVATE
     "${TARGET_SRC_DIR}/adc.c" "${COMMON_SRC_DIR}/adc_common_v2.c"

@@ -2,7 +2,7 @@ set(LIB_NAME opencm3_sam3n)
 set(FAMILY SAM3N)
 set(PATH_FRAG "sam/3n")
 
-set(COMMON_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/sam/common")
+set(COMMON_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/sam/common")
 
 generate_irq(${PATH_FRAG})
 add_library(${LIB_NAME} STATIC
@@ -17,7 +17,7 @@ target_compile_options(${LIB_NAME} PRIVATE
 )
 # FIXME include only needed!
 target_include_directories(${LIB_NAME} PRIVATE
-    "${CMAKE_SOURCE_DIR}/include/"
+    "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
     "${CMAKE_BINARY_DIR}/include/"
     "${CMAKE_BINARY_DIR}/lib/stm32/"
 )
