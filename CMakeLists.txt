@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_COMPILER   arm-none-eabi-gcc)
 set(CMAKE_AR  arm-none-eabi-ar)
 
+set(LIBOPENCM3_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> rcsD <TARGET> <OBJECTS> ")
 
 function(generate_irq MCU_PATH)
@@ -17,18 +18,18 @@ function(generate_irq MCU_PATH)
         COMMAND
             mkdir -p ${CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/
             && mkdir -p ${CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/
-            && python ${CMAKE_SOURCE_DIR}/scripts/irq2nvic_h ./include/libopencm3/${MCU_PATH}/irq.json
-            && mv ${CMAKE_SOURCE_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h ${CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h
-            && mv ${CMAKE_SOURCE_DIR}/include/libopencm3/${MCU_PATH}/nvic.h ${CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/nvic.h
-            && mv ${CMAKE_SOURCE_DIR}/lib/${MCU_PATH}/vector_nvic.c ${CMAKE_BINARY_DIR}/lib/${MCU_PATH}/vector_nvic.c
+            && python ${LIBOPENCM3_CMAKE_SOURCE_DIR}/scripts/irq2nvic_h ./include/libopencm3/${MCU_PATH}/irq.json
+            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h ${CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h
+            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/libopencm3/${MCU_PATH}/nvic.h ${CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/nvic.h
+            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${MCU_PATH}/vector_nvic.c ${CMAKE_BINARY_DIR}/lib/${MCU_PATH}/vector_nvic.c
         DEPENDS
-            "${CMAKE_SOURCE_DIR}/include/libopencm3/${MCU_PATH}/irq.json"
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/libopencm3/${MCU_PATH}/irq.json"
+        WORKING_DIRECTORY "${LIBOPENCM3_CMAKE_SOURCE_DIR}"
         VERBATIM
     )
 endfunction()
 
-set(CM3_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/cm3")
+set(CM3_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/cm3")
 set(CM3_SRCS
     "${CM3_SRC_DIR}/vector.c"
     "${CM3_SRC_DIR}/systick.c"

@@ -2,7 +2,7 @@ set(LIB_NAME opencm3_swm050)
 set(FAMILY SWM050)
 set(PATH_FRAG "swm050")
 
-set(COMMON_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/swm050")
+set(COMMON_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/swm050")
 
 generate_irq(${PATH_FRAG})
 add_library(${LIB_NAME} STATIC
@@ -20,7 +20,7 @@ target_compile_options(${LIB_NAME} PRIVATE
 )
 # FIXME include only needed!
 target_include_directories(${LIB_NAME} PRIVATE
-    "${CMAKE_SOURCE_DIR}/include/"
+    "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
     "${CMAKE_BINARY_DIR}/include/"
     "${CMAKE_BINARY_DIR}/lib/stm32/"
 )

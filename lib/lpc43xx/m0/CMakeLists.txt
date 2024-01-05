@@ -2,8 +2,8 @@ set(LIB_NAME opencm3_lpc43xx_m0)
 set(FAMILY LPC43XX_M0)
 set(PATH_FRAG "lpc43xx/m0")
 
-set(TARGET_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
-set(COMMON_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/lpc43xx")
+set(TARGET_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
+set(COMMON_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/lpc43xx")
 
 generate_irq(${PATH_FRAG})
 add_library(${LIB_NAME} STATIC
@@ -18,7 +18,7 @@ target_compile_options(${LIB_NAME} PRIVATE
 )
 # FIXME include only needed!
 target_include_directories(${LIB_NAME} PRIVATE
-    "${CMAKE_SOURCE_DIR}/include/"
+    "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
     "${CMAKE_BINARY_DIR}/include/"
     "${CMAKE_BINARY_DIR}/lib/stm32/"
 )

@@ -2,9 +2,9 @@ set(LIB_NAME opencm3_ezr32wg)
 set(FAMILY EZR32WG)
 set(PATH_FRAG "efm32/ezr32wg")
 
-set(COMMON_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/efm32/common")
-set(USB_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/usb")
-set(TARGET_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
+set(COMMON_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/efm32/common")
+set(USB_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/usb")
+set(TARGET_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
 
 generate_irq(${PATH_FRAG})
 add_library(${LIB_NAME} STATIC
@@ -24,7 +24,7 @@ target_compile_options(${LIB_NAME} PRIVATE
 )
 # FIXME include only needed!
 target_include_directories(${LIB_NAME} PRIVATE
-    "${CMAKE_SOURCE_DIR}/include/"
+    "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
     "${CMAKE_BINARY_DIR}/include/"
     "${CMAKE_BINARY_DIR}/lib/stm32/"
 )
