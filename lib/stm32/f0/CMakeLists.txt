@@ -26,9 +26,9 @@ target_compile_options(${LIB_NAME} PRIVATE
 # FIXME include only needed!
 target_include_directories(${LIB_NAME}
     PRIVATE
-        "${CMAKE_BINARY_DIR}/include/"
         "${CMAKE_BINARY_DIR}/lib/stm32/"
     PUBLIC
+        "${CMAKE_BINARY_DIR}/include/"
         "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
 )
 target_sources(${LIB_NAME} PRIVATE
