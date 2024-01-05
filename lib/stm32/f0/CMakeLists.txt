@@ -5,7 +5,6 @@ set(PATH_FRAG "stm32/f0")
 set(COMMON_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/stm32/common")
 set(COMMON_STM32_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/stm32")
 set(USB_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/usb")
-set(CM3_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/cm3")
 set(TARGET_SRC_DIR "${CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
 
 generate_irq(${PATH_FRAG})
@@ -55,12 +54,5 @@ target_sources(${LIB_NAME} PRIVATE
     "${USB_SRC_DIR}/usb_audio.c" "${USB_SRC_DIR}/usb_cdc.c" "${USB_SRC_DIR}/usb_midi.c"
     "${COMMON_SRC_DIR}/st_usbfs_core.c" "${COMMON_STM32_SRC_DIR}/st_usbfs_v2.c"
 
-    # FIXME cmsis sources
-    "${CM3_SRC_DIR}/vector.c"
-    "${CM3_SRC_DIR}/systick.c"
-    "${CM3_SRC_DIR}/scb.c"
-    "${CM3_SRC_DIR}/nvic.c"
-    "${CM3_SRC_DIR}/assert.c"
-    "${CM3_SRC_DIR}/sync.c"
-    "${CM3_SRC_DIR}/dwt.c"
+    "${CM3_SRCS}"
 )
