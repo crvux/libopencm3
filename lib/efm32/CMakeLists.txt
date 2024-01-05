@@ -1,0 +1,7 @@
+add_subdirectory(ezr32wg)
+add_subdirectory(g)
+add_subdirectory(gg)
+add_subdirectory(hg)
+add_subdirectory(lg)
+add_subdirectory(tg)
+add_subdirectory(wg)

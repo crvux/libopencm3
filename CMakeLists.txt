@@ -41,56 +41,17 @@ set(CM3_SRCS
     "${CM3_SRC_DIR}/dwt.c"
 )
 
-# efm32
-add_subdirectory(lib/efm32/ezr32wg)
-add_subdirectory(lib/efm32/g)
-add_subdirectory(lib/efm32/gg)
-add_subdirectory(lib/efm32/hg)
-add_subdirectory(lib/efm32/lg)
-add_subdirectory(lib/efm32/tg)
-add_subdirectory(lib/efm32/wg)
-# gd32
-add_subdirectory(lib/gd32/f1x0)
-# lm3s
+add_subdirectory(lib/efm32)
+add_subdirectory(lib/gd32)
 add_subdirectory(lib/lm3s)
-# lm4f
 add_subdirectory(lib/lm4f)
-# lpc13xx
 add_subdirectory(lib/lpc13xx)
-# lpc17xx
 add_subdirectory(lib/lpc17xx)
-# lpc43xx
-add_subdirectory(lib/lpc43xx/m0)
-add_subdirectory(lib/lpc43xx/m4)
-# msp432
-add_subdirectory(lib/msp432/e4)
-# nrf
-add_subdirectory(lib/nrf/51)
-add_subdirectory(lib/nrf/52)
-# pac55xx
+add_subdirectory(lib/lpc43xx)
+add_subdirectory(lib/msp432)
+add_subdirectory(lib/nrf)
 add_subdirectory(lib/pac55xx)
-# sam
-add_subdirectory(lib/sam/3a)
-add_subdirectory(lib/sam/3n)
-add_subdirectory(lib/sam/3s)
-add_subdirectory(lib/sam/3u)
-add_subdirectory(lib/sam/3x)
-add_subdirectory(lib/sam/4l)
-add_subdirectory(lib/sam/d)
-# stm32
-add_subdirectory(lib/stm32/f0)
-add_subdirectory(lib/stm32/f1)
-add_subdirectory(lib/stm32/f2)
-add_subdirectory(lib/stm32/f3)
-add_subdirectory(lib/stm32/f4)
-add_subdirectory(lib/stm32/f7)
-add_subdirectory(lib/stm32/g0)
-add_subdirectory(lib/stm32/g4)
-add_subdirectory(lib/stm32/h7)
-add_subdirectory(lib/stm32/l0)
-add_subdirectory(lib/stm32/l1)
-add_subdirectory(lib/stm32/l4)
-# swm050
+add_subdirectory(lib/sam)
+add_subdirectory(lib/stm32)
 add_subdirectory(lib/swm050)
-# vf6xx
 add_subdirectory(lib/vf6xx)
