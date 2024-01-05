@@ -12,6 +12,7 @@ add_library(${LIB_NAME} STATIC
     "${CMAKE_BINARY_DIR}/include/libopencmsis/${PATH_FRAG}/irqhandlers.h"
     "${CMAKE_BINARY_DIR}/include/libopencm3/${PATH_FRAG}/nvic.h"
 )
+add_library(libopencm3::stm32::f0 ALIAS ${LIB_NAME})
 target_compile_definitions(${LIB_NAME} PUBLIC ${FAMILY})
 target_compile_options(${LIB_NAME} PRIVATE
     -Os
@@ -23,10 +24,12 @@ target_compile_options(${LIB_NAME} PRIVATE
     -ffunction-sections -fdata-sections
 )
 # FIXME include only needed!
-target_include_directories(${LIB_NAME} PRIVATE
-    "${CMAKE_SOURCE_DIR}/include/"
-    "${CMAKE_BINARY_DIR}/include/"
-    "${CMAKE_BINARY_DIR}/lib/stm32/"
+target_include_directories(${LIB_NAME}
+    PRIVATE
+        "${CMAKE_BINARY_DIR}/include/"
+        "${CMAKE_BINARY_DIR}/lib/stm32/"
+    PUBLIC
+        "${CMAKE_SOURCE_DIR}/include/"
 )
 target_sources(${LIB_NAME} PRIVATE
     "${TARGET_SRC_DIR}/adc.c" "${COMMON_SRC_DIR}/adc_common_v2.c"
