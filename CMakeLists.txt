@@ -6,8 +6,6 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_COMPILER   arm-none-eabi-gcc)
 set(CMAKE_AR  arm-none-eabi-ar)
 
-set(CMAKE_C_OUTPUT_EXTENSION_REPLACE 1)
-set(CMAKE_C_OUTPUT_EXTENSION .o)
 set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> rcsD <TARGET> <OBJECTS> ")
 
 function(generate_irq MCU_PATH)
