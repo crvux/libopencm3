@@ -23,8 +23,6 @@ target_compile_options(${LIB_NAME} PRIVATE
     -fno-common
     -mcpu=cortex-m3 -mthumb -Wstrict-prototypes
     -ffunction-sections -fdata-sections
-    -std=c99
-    #    -ggdb3
 )
 # FIXME include only needed!
 target_include_directories(${LIB_NAME} PRIVATE
