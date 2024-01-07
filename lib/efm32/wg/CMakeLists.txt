@@ -1,52 +1,32 @@
-set(LIB_NAME opencm3_efm32wg)
-set(FAMILY EFM32WG)
-set(PATH_FRAG "efm32/wg")
+libopencm3_add_library(
+    NAME "efm32wg"
+    ALIAS_NAME "efm32::wg"
+    DEFINITIONS EFM32WG
+    PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
+    PRIVATE_COMPILE_OPTIONS -Os
+    GENERATE_IRQ
+    VPATH "../../usb" "../common"
+    FILES
+        acmp_common.c
+        adc_common.c
+        burtc_common.c
+        cmu_common.c
+        dac_common.c
+        dma_common.c
+        emu_common.c
+        gpio_common.c
+        i2c_common.c
+        letimer_common.c
+        msc_common.c
+        prs_common.c
+        rmu_common.c
+        rtc_common.c
+        timer_common.c
+        usart_common.c
+        wdog_common.c
 
-set(COMMON_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/efm32/common")
-set(USB_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/usb")
-set(TARGET_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
-
-generate_irq(${PATH_FRAG})
-add_library(${LIB_NAME} STATIC
-    "${CMAKE_BINARY_DIR}/include/libopencmsis/${PATH_FRAG}/irqhandlers.h"
-    "${CMAKE_BINARY_DIR}/include/libopencm3/${PATH_FRAG}/nvic.h"
-)
-target_compile_definitions(${LIB_NAME} PUBLIC ${FAMILY})
-target_compile_options(${LIB_NAME} PRIVATE
-    ${GCC_WARN_OPTIONS}
-    -mcpu=cortex-m4 -mthumb
-    -mfloat-abi=hard -mfpu=fpv4-sp-d16
-    -Os -fno-common -ffunction-sections -fdata-sections
-)
-# FIXME include only needed!
-target_include_directories(${LIB_NAME} PRIVATE
-    "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
-    "${CMAKE_BINARY_DIR}/include/"
-    "${CMAKE_BINARY_DIR}/lib/stm32/"
-)
-target_sources(${LIB_NAME} PRIVATE
-    "${COMMON_SRC_DIR}/acmp_common.c"
-    "${COMMON_SRC_DIR}/adc_common.c"
-    "${COMMON_SRC_DIR}/burtc_common.c"
-    "${COMMON_SRC_DIR}/cmu_common.c"
-    "${COMMON_SRC_DIR}/dac_common.c"
-    "${COMMON_SRC_DIR}/dma_common.c"
-    "${COMMON_SRC_DIR}/emu_common.c"
-    "${COMMON_SRC_DIR}/gpio_common.c"
-    "${COMMON_SRC_DIR}/i2c_common.c"
-    "${COMMON_SRC_DIR}/letimer_common.c"
-    "${COMMON_SRC_DIR}/msc_common.c"
-    "${COMMON_SRC_DIR}/prs_common.c"
-    "${COMMON_SRC_DIR}/rmu_common.c"
-    "${COMMON_SRC_DIR}/rtc_common.c"
-    "${COMMON_SRC_DIR}/timer_common.c"
-    "${COMMON_SRC_DIR}/usart_common.c"
-    "${COMMON_SRC_DIR}/wdog_common.c"
-
-    "${USB_SRC_DIR}/usb.c" "${USB_SRC_DIR}/usb_control.c" "${USB_SRC_DIR}/usb_standard.c" "${USB_SRC_DIR}/usb_msc.c"
-    "${USB_SRC_DIR}/usb_hid.c"
-    "${USB_SRC_DIR}/usb_audio.c" "${USB_SRC_DIR}/usb_cdc.c" "${USB_SRC_DIR}/usb_midi.c"
-    "${USB_SRC_DIR}/usb_efm32.c"
-
-    "${CM3_SRCS}"
+        usb.c usb_control.c usb_standard.c usb_msc.c
+        usb_hid.c
+        usb_audio.c usb_cdc.c usb_midi.c
+        usb_efm32.c
 )

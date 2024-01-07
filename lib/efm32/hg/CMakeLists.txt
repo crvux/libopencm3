@@ -1,37 +1,18 @@
-set(LIB_NAME opencm3_efm32hg)
-set(FAMILY EFM32HG)
-set(PATH_FRAG "efm32/hg")
+libopencm3_add_library(
+    NAME "efm32hg"
+    ALIAS_NAME "efm32::hg"
+    DEFINITIONS EFM32HG
+    PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m0plus -mthumb
+    PRIVATE_COMPILE_OPTIONS -Os
+    GENERATE_IRQ
+    VPATH "../../usb" "../common"
+    FILES
+        cmu.c
+        gpio_common.c
+        timer_common.c
 
-set(COMMON_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/efm32/common")
-set(USB_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/usb")
-set(TARGET_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${PATH_FRAG}")
-
-generate_irq(${PATH_FRAG})
-add_library(${LIB_NAME} STATIC
-    "${CMAKE_BINARY_DIR}/include/libopencmsis/${PATH_FRAG}/irqhandlers.h"
-    "${CMAKE_BINARY_DIR}/include/libopencm3/${PATH_FRAG}/nvic.h"
-)
-target_compile_definitions(${LIB_NAME} PUBLIC ${FAMILY})
-target_compile_options(${LIB_NAME} PRIVATE
-    ${GCC_WARN_OPTIONS}
-    -mcpu=cortex-m0plus -mthumb
-    -Os -fno-common -ffunction-sections -fdata-sections
-)
-# FIXME include only needed!
-target_include_directories(${LIB_NAME} PRIVATE
-    "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/"
-    "${CMAKE_BINARY_DIR}/include/"
-    "${CMAKE_BINARY_DIR}/lib/stm32/"
-)
-target_sources(${LIB_NAME} PRIVATE
-    "${TARGET_SRC_DIR}/cmu.c"
-    "${COMMON_SRC_DIR}/gpio_common.c"
-    "${COMMON_SRC_DIR}/timer_common.c"
-
-    "${USB_SRC_DIR}/usb.c" "${USB_SRC_DIR}/usb_control.c" "${USB_SRC_DIR}/usb_standard.c" "${USB_SRC_DIR}/usb_msc.c"
-    "${USB_SRC_DIR}/usb_hid.c"
-    "${USB_SRC_DIR}/usb_audio.c" "${USB_SRC_DIR}/usb_cdc.c" "${USB_SRC_DIR}/usb_midi.c"
-    "${USB_SRC_DIR}/usb_dwc_common.c" "${USB_SRC_DIR}/usb_efm32hg.c"
-
-    "${CM3_SRCS}"
+        usb.c usb_control.c usb_standard.c usb_msc.c
+        usb_hid.c
+        usb_audio.c usb_cdc.c usb_midi.c
+        usb_dwc_common.c usb_efm32hg.c
 )
