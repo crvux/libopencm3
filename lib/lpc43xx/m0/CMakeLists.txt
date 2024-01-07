@@ -12,9 +12,9 @@ add_library(${LIB_NAME} STATIC
 )
 target_compile_definitions(${LIB_NAME} PUBLIC ${FAMILY} LPC43XX)
 target_compile_options(${LIB_NAME} PRIVATE
-    -O2 -Wall -Wextra -fno-common
-    -mcpu=cortex-m0 -mthumb -Wstrict-prototypes
-    -ffunction-sections -fdata-sections
+    ${GCC_WARN_OPTIONS}
+    -mcpu=cortex-m0 -mthumb
+    -O2 -fno-common -ffunction-sections -fdata-sections
 )
 # FIXME include only needed!
 target_include_directories(${LIB_NAME} PRIVATE

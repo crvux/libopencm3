@@ -40,6 +40,17 @@ set(CM3_SRCS
     "${CM3_SRC_DIR}/dwt.c"
 )
 
+set(GCC_WARN_OPTIONS
+    -Wall
+    -Wextra
+    -Wimplicit-function-declaration
+    -Wredundant-decls
+    -Wmissing-prototypes
+    -Wstrict-prototypes
+    -Wundef
+    -Wshadow
+)
+
 add_subdirectory(lib/efm32)
 add_subdirectory(lib/gd32)
 add_subdirectory(lib/lm3s)
