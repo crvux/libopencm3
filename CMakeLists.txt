@@ -35,6 +35,34 @@ function(libopencm3_find_sources _OUTLIST _SRCS _DIR)
     set(${_OUTLIST} ${${_OUTLIST}} ${_SRCS} PARENT_SCOPE)
 endfunction()
 
+function(libopencm3_check_sources __FILES _SRCS _RESULT)
+    set(result ${${__FILES}})
+    foreach(found_file IN LISTS ${_SRCS})
+        get_filename_component(filename "${found_file}" NAME)
+        list(REMOVE_ITEM result "${filename}")
+    endforeach()
+    set(${_RESULT} ${result} PARENT_SCOPE)
+endfunction()
+
+function(libopencm3_collect_sources _FILES _VPATH _RESULT)
+    list(TRANSFORM _VPATH PREPEND "${CMAKE_CURRENT_LIST_DIR}/")
+    list(APPEND _VPATH "${CMAKE_CURRENT_LIST_DIR}")
+    set(srcs "")
+    foreach(path IN LISTS _VPATH)
+        libopencm3_find_sources(srcs "${_FILES}" "${path}")
+    endforeach()
+    libopencm3_check_sources(_FILES srcs CHECK_RESULT)
+    if(CHECK_RESULT)
+        message(FATAL_ERROR
+            "Not all sources found!\n"
+            "CMAKE_CURRENT_LIST_DIR: ${CMAKE_CURRENT_LIST_DIR}\n"
+            "VPATH: ${_VPATH}\n"
+            "CHECK_RESULT: ${CHECK_RESULT}"
+        )
+    endif()
+    set(${_RESULT} ${srcs} PARENT_SCOPE)
+endfunction()
+
 function(libopencm3_add_library)
     # FIXME check mandatory args!
     set(options GENERATE_IRQ)
@@ -57,13 +85,7 @@ function(libopencm3_add_library)
 
     # sources
     # try to implement vpath like behavior
-    list(TRANSFORM _ARG_VPATH PREPEND "${CMAKE_CURRENT_LIST_DIR}/")
-    list(APPEND _ARG_VPATH "${CMAKE_CURRENT_LIST_DIR}")
-    set(srcs "")
-    foreach(path IN LISTS _ARG_VPATH)
-        libopencm3_find_sources(srcs "${_ARG_FILES}" "${path}")
-    endforeach()
-    # FIXME do error if not all files found!
+    libopencm3_collect_sources("${_ARG_FILES}" "${_ARG_VPATH}" srcs)
     set(CM3_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/cm3")
     set(CM3_SRCS
         "${CM3_SRC_DIR}/vector.c" "${CM3_SRC_DIR}/systick.c" "${CM3_SRC_DIR}/scb.c"
@@ -89,14 +111,12 @@ function(libopencm3_add_library)
             -fno-common -ffunction-sections -fdata-sections
     )
     # FIXME inconsistency!
+    # FIXME bug with files copy!
     if("${_ARG_NAME}" STREQUAL "lm4f")
         generate_irq("lm3s")
         target_include_directories(${target}
-            PUBLIC
-                "${CMAKE_BINARY_DIR}/include"
-                "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include"
-            PRIVATE
-                "${CMAKE_BINARY_DIR}/lib/lm3s"
+            PUBLIC "${CMAKE_BINARY_DIR}/include"
+            PRIVATE "${CMAKE_BINARY_DIR}/lib/lm3s"
         )
         target_sources(${target} PRIVATE
             "${CMAKE_BINARY_DIR}/include/libopencmsis/lm3s/irqhandlers.h"
@@ -109,19 +129,15 @@ function(libopencm3_add_library)
         string(REPLACE "/" ";" commonDir ${genDir})
         list(GET commonDir 0 commonDir)
         target_include_directories(${target}
-            PUBLIC
-                "${CMAKE_BINARY_DIR}/include"
-                "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include"
-            PRIVATE
-                "${CMAKE_BINARY_DIR}/lib/${commonDir}"
+            PUBLIC "${CMAKE_BINARY_DIR}/include"
+            PRIVATE "${CMAKE_BINARY_DIR}/lib/${commonDir}"
         )
         target_sources(${target} PRIVATE
             "${CMAKE_BINARY_DIR}/include/libopencmsis/${genDir}/irqhandlers.h"
             "${CMAKE_BINARY_DIR}/include/libopencm3/${genDir}/nvic.h"
         )
-    else()
-        target_include_directories(${target} PUBLIC "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/")
     endif()
+    target_include_directories(${target} PUBLIC "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/")
     target_sources(${target} PRIVATE ${srcs} ${CM3_SRCS})
 endfunction()
 
