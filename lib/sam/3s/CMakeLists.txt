@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS SAM3S
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m3 -mthumb
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     VPATH "../common"
     FILES
         gpio_common_all.c gpio_common_3n3s.c

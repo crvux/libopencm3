@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS SAM4L
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m4 -mthumb -msoft-float
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     VPATH "../common"
     FILES
         adcife.c

@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS LPC43XX LPC43XX_M0
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m0 -mthumb
     PRIVATE_COMPILE_OPTIONS -O2
-    GENERATE_IRQ
     VPATH "../"
     FILES
         gpio.c

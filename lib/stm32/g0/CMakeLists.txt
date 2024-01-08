@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS STM32G0
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m0plus -mthumb
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     VPATH "../common"
     FILES
         adc.c adc_common_v2.c

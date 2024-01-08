@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS EFM32HG
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m0plus -mthumb
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     VPATH "../../usb" "../common"
     FILES
         cmu.c

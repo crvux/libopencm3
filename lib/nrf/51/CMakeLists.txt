@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS NRF51
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m0 -mthumb -msoft-float
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     VPATH "../common"
     FILES
         clock_common.c clock.c

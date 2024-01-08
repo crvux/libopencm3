@@ -65,12 +65,10 @@ endfunction()
 
 function(libopencm3_add_library)
     # FIXME check mandatory args!
-    set(options GENERATE_IRQ)
     set(oneValueArgs NAME ALIAS_NAME)
     set(multiValueArgs VPATH FILES DEFINITIONS PRIVATE_COMPILE_OPTIONS PUBLIC_COMPILE_OPTIONS)
     cmake_parse_arguments(_ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-#    message("_ARG_GENERATE_IRQ=${_ARG_GENERATE_IRQ}")
 #    message("_ARG_NAME=${_ARG_NAME}")
 #    message("_ARG_ALIAS_NAME=${_ARG_ALIAS_NAME}")
 #    message("_ARG_VPATH=${_ARG_VPATH}")
@@ -122,7 +120,7 @@ function(libopencm3_add_library)
             "${CMAKE_BINARY_DIR}/include/libopencmsis/lm3s/irqhandlers.h"
             "${CMAKE_BINARY_DIR}/include/libopencm3/lm3s/nvic.h"
         )
-    elseif(_ARG_GENERATE_IRQ)
+    else()
         # FIXME bad handling of generated files
         string(REPLACE "::" "/" genDir ${_ARG_ALIAS_NAME})
         generate_irq(${genDir})

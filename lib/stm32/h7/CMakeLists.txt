@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS STM32H7
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     VPATH "../common"
     FILES
         dac_common_all.c dac_common_v2.c

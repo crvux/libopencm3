@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS EFM32LG
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m3 -mthumb
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     VPATH "../../usb" "../common"
     FILES
         acmp_common.c

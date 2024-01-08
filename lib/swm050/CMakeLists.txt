@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS SWM050
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m0 -mthumb
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     FILES
         clk.c
         flash.c

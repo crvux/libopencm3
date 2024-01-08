@@ -4,7 +4,6 @@ libopencm3_add_library(
     DEFINITIONS STM32F4
     PUBLIC_COMPILE_OPTIONS -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
     PRIVATE_COMPILE_OPTIONS -Os
-    GENERATE_IRQ
     VPATH "../../usb" "../../ethernet" "../common" "../"
     FILES
         adc_common_v1.c adc_common_v1_multi.c adc_common_f47.c
