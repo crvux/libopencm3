@@ -29,38 +29,25 @@ function(generate_irq MCU_PATH)
     )
 endfunction()
 
-function(libopencm3_find_sources _OUTLIST _SRCS _DIR)
-    list(TRANSFORM _SRCS PREPEND "${_DIR}/")
-    file(GLOB _SRCS LIST_DIRECTORIES ON ${_SRCS})
-    set(${_OUTLIST} ${${_OUTLIST}} ${_SRCS} PARENT_SCOPE)
-endfunction()
-
-function(libopencm3_check_sources __FILES _SRCS _RESULT)
-    set(result ${${__FILES}})
-    foreach(found_file IN LISTS ${_SRCS})
-        get_filename_component(filename "${found_file}" NAME)
-        list(REMOVE_ITEM result "${filename}")
+function(libopencm3_collect_sources _FILES _VPATH _FOUND_VAR _NOT_FOUND_VAR)
+    # Find sources in vpath dirs
+    set(found "")
+    foreach(path IN LISTS ${_VPATH})
+        set(checkSrcs ${${_FILES}})
+        list(TRANSFORM checkSrcs PREPEND "${path}/")
+        file(GLOB foundSrcs LIST_DIRECTORIES ON ${checkSrcs})
+        set(found ${found} ${foundSrcs})
     endforeach()
-    set(${_RESULT} ${result} PARENT_SCOPE)
-endfunction()
 
-function(libopencm3_collect_sources _FILES _VPATH _RESULT)
-    list(TRANSFORM _VPATH PREPEND "${CMAKE_CURRENT_LIST_DIR}/")
-    list(APPEND _VPATH "${CMAKE_CURRENT_LIST_DIR}")
-    set(srcs "")
-    foreach(path IN LISTS _VPATH)
-        libopencm3_find_sources(srcs "${_FILES}" "${path}")
+    # Check matching
+    set(notFound ${${_FILES}})
+    foreach(foundFile IN LISTS found)
+        get_filename_component(filename "${foundFile}" NAME)
+        list(REMOVE_ITEM notFound "${filename}")
     endforeach()
-    libopencm3_check_sources(_FILES srcs CHECK_RESULT)
-    if(CHECK_RESULT)
-        message(FATAL_ERROR
-            "Not all sources found!\n"
-            "CMAKE_CURRENT_LIST_DIR: ${CMAKE_CURRENT_LIST_DIR}\n"
-            "VPATH: ${_VPATH}\n"
-            "CHECK_RESULT: ${CHECK_RESULT}"
-        )
-    endif()
-    set(${_RESULT} ${srcs} PARENT_SCOPE)
+
+    set(${_FOUND_VAR} ${found} PARENT_SCOPE)
+    set(${_NOT_FOUND_VAR} ${notFound} PARENT_SCOPE)
 endfunction()
 
 function(libopencm3_add_library)
@@ -83,18 +70,22 @@ function(libopencm3_add_library)
 
     # sources
     # try to implement vpath like behavior
-    libopencm3_collect_sources("${_ARG_FILES}" "${_ARG_VPATH}" srcs)
-    set(CM3_SRC_DIR "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/cm3")
-    set(CM3_SRCS
-        "${CM3_SRC_DIR}/vector.c" "${CM3_SRC_DIR}/systick.c" "${CM3_SRC_DIR}/scb.c"
-        "${CM3_SRC_DIR}/nvic.c" "${CM3_SRC_DIR}/assert.c" "${CM3_SRC_DIR}/sync.c"
-        "${CM3_SRC_DIR}/dwt.c"
-    )
-
-    # compiler options
-    set(GCC_WARN_OPTIONS
-        -Wall -Wextra -Wimplicit-function-declaration -Wredundant-decls
-        -Wmissing-prototypes -Wstrict-prototypes -Wundef -Wshadow
+    set(vpath "${_ARG_VPATH}")
+    list(TRANSFORM vpath PREPEND "${CMAKE_CURRENT_LIST_DIR}/")
+    list(APPEND vpath "${CMAKE_CURRENT_LIST_DIR}")
+    libopencm3_collect_sources(_ARG_FILES vpath srcs notFoundSrcs)
+    if(notFoundSrcs)
+        message(FATAL_ERROR
+            "Sources not found: ${notFoundSrcs}\n"
+            "CMAKE_CURRENT_LIST_DIR: ${CMAKE_CURRENT_LIST_DIR}\n"
+            "vpath: ${vpath}\n"
+        )
+    endif()
+    set(cm3SrcDir "${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/cm3")
+    list(APPEND srcs
+        "${cm3SrcDir}/vector.c" "${cm3SrcDir}/systick.c" "${cm3SrcDir}/scb.c"
+        "${cm3SrcDir}/nvic.c" "${cm3SrcDir}/assert.c" "${cm3SrcDir}/sync.c"
+        "${cm3SrcDir}/dwt.c"
     )
 
     add_library(${target} STATIC)
@@ -105,7 +96,8 @@ function(libopencm3_add_library)
             ${_ARG_PUBLIC_COMPILE_OPTIONS}
         PRIVATE
             ${_ARG_PRIVATE_COMPILE_OPTIONS}
-            ${GCC_WARN_OPTIONS}
+            -Wall -Wextra -Wimplicit-function-declaration -Wredundant-decls
+            -Wmissing-prototypes -Wstrict-prototypes -Wundef -Wshadow
             -fno-common -ffunction-sections -fdata-sections
     )
     # FIXME inconsistency!
@@ -136,7 +128,7 @@ function(libopencm3_add_library)
         )
     endif()
     target_include_directories(${target} PUBLIC "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/")
-    target_sources(${target} PRIVATE ${srcs} ${CM3_SRCS})
+    target_sources(${target} PRIVATE ${srcs})
 endfunction()
 
 add_subdirectory(lib/efm32)
