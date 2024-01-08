@@ -7,21 +7,22 @@ set(CMAKE_C_COMPILER   arm-none-eabi-gcc)
 set(CMAKE_AR  arm-none-eabi-ar)
 
 set(LIBOPENCM3_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(LIBOPENCM3_CMAKE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> rcsD <TARGET> <OBJECTS> ")
 
 function(generate_irq MCU_PATH)
     add_custom_command(
         OUTPUT
-            "${CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h"
-            "${CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/nvic.h"
-            "${CMAKE_BINARY_DIR}/lib/${MCU_PATH}/vector_nvic.c"
+            "${LIBOPENCM3_CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h"
+            "${LIBOPENCM3_CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/nvic.h"
+            "${LIBOPENCM3_CMAKE_BINARY_DIR}/lib/${MCU_PATH}/vector_nvic.c"
         COMMAND
-            mkdir -p ${CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/
-            && mkdir -p ${CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/
+            mkdir -p ${LIBOPENCM3_CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/
+            && mkdir -p ${LIBOPENCM3_CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/
             && python ${LIBOPENCM3_CMAKE_SOURCE_DIR}/scripts/irq2nvic_h ./include/libopencm3/${MCU_PATH}/irq.json
-            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h ${CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h
-            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/libopencm3/${MCU_PATH}/nvic.h ${CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/nvic.h
-            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${MCU_PATH}/vector_nvic.c ${CMAKE_BINARY_DIR}/lib/${MCU_PATH}/vector_nvic.c
+            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h ${LIBOPENCM3_CMAKE_BINARY_DIR}/include/libopencmsis/${MCU_PATH}/irqhandlers.h
+            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/libopencm3/${MCU_PATH}/nvic.h ${LIBOPENCM3_CMAKE_BINARY_DIR}/include/libopencm3/${MCU_PATH}/nvic.h
+            && mv ${LIBOPENCM3_CMAKE_SOURCE_DIR}/lib/${MCU_PATH}/vector_nvic.c ${LIBOPENCM3_CMAKE_BINARY_DIR}/lib/${MCU_PATH}/vector_nvic.c
         DEPENDS
             "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/libopencm3/${MCU_PATH}/irq.json"
         WORKING_DIRECTORY "${LIBOPENCM3_CMAKE_SOURCE_DIR}"
@@ -103,30 +104,24 @@ function(libopencm3_add_library)
     # FIXME inconsistency!
     # FIXME bug with files copy!
     if("${_ARG_NAME}" STREQUAL "lm4f")
-        generate_irq("lm3s")
-        target_include_directories(${target}
-            PUBLIC "${CMAKE_BINARY_DIR}/include"
-            PRIVATE "${CMAKE_BINARY_DIR}/lib/lm3s"
-        )
-        target_sources(${target} PRIVATE
-            "${CMAKE_BINARY_DIR}/include/libopencmsis/lm3s/irqhandlers.h"
-            "${CMAKE_BINARY_DIR}/include/libopencm3/lm3s/nvic.h"
-        )
+        set(genDir "lm3s")
+        set(commonDir "lm3s")
     else()
-        # FIXME bad handling of generated files
         string(REPLACE "::" "/" genDir ${_ARG_ALIAS_NAME})
-        generate_irq(${genDir})
         string(REPLACE "/" ";" commonDir ${genDir})
-        list(GET commonDir 0 commonDir)
-        target_include_directories(${target}
-            PUBLIC "${CMAKE_BINARY_DIR}/include"
-            PRIVATE "${CMAKE_BINARY_DIR}/lib/${commonDir}"
-        )
-        target_sources(${target} PRIVATE
-            "${CMAKE_BINARY_DIR}/include/libopencmsis/${genDir}/irqhandlers.h"
-            "${CMAKE_BINARY_DIR}/include/libopencm3/${genDir}/nvic.h"
-        )
     endif()
+    # FIXME bad handling of generated files
+    generate_irq(${genDir})
+    list(GET commonDir 0 commonDir)
+    target_include_directories(${target}
+        PUBLIC "${LIBOPENCM3_CMAKE_BINARY_DIR}/include"
+        PRIVATE "${LIBOPENCM3_CMAKE_BINARY_DIR}/lib/${commonDir}"
+    )
+    target_sources(${target} PRIVATE
+        "${LIBOPENCM3_CMAKE_BINARY_DIR}/include/libopencmsis/${genDir}/irqhandlers.h"
+        "${LIBOPENCM3_CMAKE_BINARY_DIR}/include/libopencm3/${genDir}/nvic.h"
+    )
+
     target_include_directories(${target} PUBLIC "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/")
     target_sources(${target} PRIVATE ${srcs})
 endfunction()
