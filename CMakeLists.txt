@@ -124,6 +124,9 @@ function(libopencm3_add_library)
 
     target_include_directories(${target} PUBLIC "${LIBOPENCM3_CMAKE_SOURCE_DIR}/include/")
     target_sources(${target} PRIVATE ${srcs})
+
+    # Arch options etc.
+    target_link_options(${target} INTERFACE ${_ARG_PUBLIC_COMPILE_OPTIONS} -nostartfiles)
 endfunction()
 
 add_subdirectory(lib/efm32)
